@@ -10,9 +10,9 @@ import tensorflow as tf
 from os import environ
 
 app = FastAPI()
-MODEL_POTATO = tf.keras.models.load_model("./saved_models/1")
-MODEL_CORN = tf.keras.models.load_model("./saved_models/corn/1")
-MODEL_PEPPER = tf.keras.models.load_model("./saved_models/pepper/2")
+MODEL_POTATO = tf.keras.models.load_model("./saved_models/potato/potatoes.h5", compile=False)
+# MODEL_CORN = tf.keras.models.load_model("./saved_models/corn/1")
+# MODEL_PEPPER = tf.keras.models.load_model("./saved_models/pepper/2")
 
 
 CLASS_NAMES_POTATO = ["Early Blight", "Late Blight" ,"Healthy"]
@@ -44,40 +44,40 @@ async def predict(
     
     
     
-@app.post("/corn")
-async def predict(
-    file: UploadFile = File(...)
-):
-    image = read_file_as_image(await file.read())
+# @app.post("/corn")
+# async def predict(
+#     file: UploadFile = File(...)
+# ):
+#     image = read_file_as_image(await file.read())
     
-    img_batch = np.expand_dims(image, 0)
+#     img_batch = np.expand_dims(image, 0)
     
-    predictions = MODEL_CORN.predict(img_batch)
+#     predictions = MODEL_CORN.predict(img_batch)
     
-    predicted_class = CLASS_NAMES_CORN [np.argmax(predictions[0])]
-    confidence = np.max(predictions[0])
-    return  {
-        'class': predicted_class,
-        'confidence': float(confidence)
-    }
+#     predicted_class = CLASS_NAMES_CORN [np.argmax(predictions[0])]
+#     confidence = np.max(predictions[0])
+#     return  {
+#         'class': predicted_class,
+#         'confidence': float(confidence)
+#     }
   
     
-@app.post("/pepper")
-async def predict(
-    file: UploadFile = File(...)
-):
-    image = read_file_as_image(await file.read())
+# @app.post("/pepper")
+# async def predict(
+#     file: UploadFile = File(...)
+# ):
+#     image = read_file_as_image(await file.read())
     
-    img_batch = np.expand_dims(image, 0)
+#     img_batch = np.expand_dims(image, 0)
     
-    predictions = MODEL_PEPPER.predict(img_batch)
+#     predictions = MODEL_PEPPER.predict(img_batch)
     
-    predicted_class = CLASS_NAMES_PEPPER[np.argmax(predictions[0])]
-    confidence = np.max(predictions[0])
-    return  {
-        'class': predicted_class,
-        'confidence': float(confidence)
-    }
+#     predicted_class = CLASS_NAMES_PEPPER[np.argmax(predictions[0])]
+#     confidence = np.max(predictions[0])
+#     return  {
+#         'class': predicted_class,
+#         'confidence': float(confidence)
+#     }
     
     
 
