@@ -10,7 +10,8 @@ import tensorflow as tf
 from os import environ
 
 app = FastAPI()
-MODEL_POTATO = tf.keras.models.load_model("./saved_models/potato/potatoes.h5", compile=False)
+MODEL_POTATO = tf.keras.models.load_model("./saved_models/potato/potatoes.keras", compile=False)
+# MODEL_POTATO = tf.keras.layers.TFSMLayer("./saved_models/1",  compile=False)
 # MODEL_CORN = tf.keras.models.load_model("./saved_models/corn/1")
 # MODEL_PEPPER = tf.keras.models.load_model("./saved_models/pepper/2")
 
@@ -19,11 +20,15 @@ CLASS_NAMES_POTATO = ["Early Blight", "Late Blight" ,"Healthy"]
 CLASS_NAMES_CORN = ["Corn Blight","Corn Common Rust","Corn Gray Leaf Spot","Healthy"]
 CLASS_NAMES_PEPPER = ["Bell Bacterial Spot","Healthy"]
 
+# def read_file_as_image(data) -> np.array:
+#     image = np.array(Image.open(BytesIO(data )))
+#     return image
+    
 def read_file_as_image(data) -> np.array:
-    image = np.array(Image.open(BytesIO(data )))
-    return image
-    
-    
+    # image = np.array(Image.open(BytesIO(data )))
+    image = Image.open(BytesIO(data ))
+    image = image.resize((256, 256))
+    return np.array(image)    
     
 @app.post("/potato")
 async def predict(
@@ -37,6 +42,7 @@ async def predict(
     
     predicted_class = CLASS_NAMES_POTATO [np.argmax(predictions[0])]
     confidence = np.max(predictions[0])
+    print(predictions)
     return  {
         'class': predicted_class,
         'confidence': float(confidence)
